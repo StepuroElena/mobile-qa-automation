@@ -1,5 +1,4 @@
 using App.Automation.Pages.Locators;
-using App.Automation.Utils.Logger;
 using OpenQA.Selenium.Appium;
 
 namespace App.Automation.Pages;
