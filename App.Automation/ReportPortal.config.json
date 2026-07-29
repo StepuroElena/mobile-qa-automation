@@ -1,0 +1,14 @@
+{
+  "server": {
+    "url": "https://demo.reportportal.io/api/v1",
+    "project": "твой-project-name",
+    "authentication": {
+      "uuid": "твой-api-токен"
+    }
+  },
+  "launch": {
+    "name": "WeatherApp Automation",
+    "description": "Mobile QA Automation — Weather App",
+    "debugMode": false
+  }
+}
