@@ -1,5 +1,6 @@
 using App.Automation.Config;
 using App.Automation.Pages;
+using App.Automation.Utils.Data;
 using App.Automation.Utils.Logger;
 using OpenQA.Selenium.Appium;
 
@@ -12,7 +13,12 @@ public class BaseTest
     protected ITestLogger Logger { get; private set; } = null!;
 
     private static AppSettings _settings = null!;
+    protected AppSettings Settings => _settings;
     private IDisposable? _testLogContext;
+    
+    protected string GeneratedEmail { get; private set; } = string.Empty;
+    protected string GeneratedPassword { get; private set; } = string.Empty;
+    protected string GeneratedFullName { get; private set; } = string.Empty;
 
     [OneTimeSetUp]
     public void GlobalSetup()
@@ -32,6 +38,10 @@ public class BaseTest
         Logger.Info($"=== Starting test: {testName} ===");
 
         Driver = DriverManager.GetDriver(_settings);
+
+        GeneratedEmail = TestDataGenerator.GenerateEmail();
+        GeneratedPassword = TestDataGenerator.GeneratePassword();
+        GeneratedFullName = TestDataGenerator.GenerateFullName();
     }
 
     [TearDown]
@@ -43,6 +53,7 @@ public class BaseTest
         if (result == NUnit.Framework.Interfaces.TestStatus.Failed)
         {
             Logger.Error($"=== Test FAILED: {testName} ===");
+            CaptureScreenshotOnFailure(testName);
         }
         else
         {
@@ -57,5 +68,27 @@ public class BaseTest
     public void GlobalTearDown()
     {
         LoggerBootstrapper.CloseAndFlush();
+    }
+    
+    private void CaptureScreenshotOnFailure(string testName)
+    {
+        try
+        {
+            var screenshotsDir = Path.Combine(AppContext.BaseDirectory, "Screenshots");
+            Directory.CreateDirectory(screenshotsDir);
+
+            var fileName = $"{testName}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+            var filePath = Path.Combine(screenshotsDir, fileName);
+
+            var screenshot = Driver.GetScreenshot();
+            screenshot.SaveAsFile(filePath);
+
+            Logger.Info($"Screenshot saved: {filePath}");
+            TestContext.AddTestAttachment(filePath, "Failure screenshot");
+        }
+        catch (Exception ex)
+        {
+            Logger.Error("Failed to capture screenshot on test failure", ex);
+        }
     }
 }
