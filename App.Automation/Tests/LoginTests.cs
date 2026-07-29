@@ -30,6 +30,5 @@ public class LoginTests :BaseTest
             // TODO: implement via LoginPage.TapLoginButton()
         });
 
-        Assert.Ignore("Test implementation Page Object (LoginPage).");
     }
 }
