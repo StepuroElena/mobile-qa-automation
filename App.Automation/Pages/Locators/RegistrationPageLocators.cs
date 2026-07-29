@@ -39,4 +39,9 @@ namespace App.Automation.Pages.Locators;
         PlatformHelper.IsAndroid(platform)
             ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").text(\"<\")")
             : MobileBy.AccessibilityId("BackButton"); // TODO: verify once iOS build is available
+    
+    public static By ErrorMessage(string platform) =>
+        PlatformHelper.IsAndroid(platform)
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").text(\"An account with this email already exists.\")")
+            : MobileBy.AccessibilityId("RegistrationErrorLabel"); // TODO: verify once iOS build is available
 }

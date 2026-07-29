@@ -41,7 +41,11 @@ public abstract class BasePage
     {
         try
         {
-            return Driver.FindElement(locator).Displayed;
+            return FindVisible(locator).Displayed;
+        }
+        catch (WebDriverTimeoutException)
+        {
+            return false;
         }
         catch (NoSuchElementException)
         {

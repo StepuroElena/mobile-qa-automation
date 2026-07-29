@@ -21,6 +21,7 @@ public class RegistrationPage : BasePage
     public void TapRegisterButton() => Tap(RegistrationPageLocators.RegisterButton(_platform));
     public void TapLoginLink() => Tap(RegistrationPageLocators.LoginLink(_platform));
     public bool IsDisplayed() => IsDisplayed(RegistrationPageLocators.RegisterButton(_platform));
+    public string GetErrorMessage() => GetText(RegistrationPageLocators.ErrorMessage(_platform));
 
     public void Register(string fullName, string email, string password)
     {

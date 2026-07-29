@@ -1,7 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 
-namespace App.Automation.Pages.Locators;
+namespace App.Automation.Pages;
 
 public static class MapPageLocators
 {
@@ -14,44 +14,43 @@ public static class MapPageLocators
         PlatformHelper.IsAndroid(platform)
             ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").text(\"‹\")")
             : MobileBy.AccessibilityId("BackButton"); // TODO: verify once iOS build is available
-    
+
     public static By SearchResultsList(string platform) =>
         PlatformHelper.IsAndroid(platform)
-            ? MobileBy.Id("com.companyname.weatherapp:id/search_results_list") // TODO: verify
-            : MobileBy.AccessibilityId("SearchResultsList");                    // TODO: verify
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"androidx.recyclerview.widget.RecyclerView\")")
+            : MobileBy.AccessibilityId("SearchResultsList"); // TODO: verify once iOS build is available
 
-    public static By FirstSearchResult(string platform) =>
-        PlatformHelper.IsAndroid(platform)
-            ? MobileBy.XPath("//android.widget.LinearLayout[@resource-id='com.companyname.weatherapp:id/search_result_item'][1]") // TODO: verify
-            : MobileBy.AccessibilityId("SearchResultItem_0");                                                                        // TODO: verify
+    public static By FirstSearchResult(string platform, string cityName)
+    {
+        var capitalized = char.ToUpper(cityName[0]) + cityName[1..].ToLower();
+
+        return PlatformHelper.IsAndroid(platform)
+            ? MobileBy.AndroidUIAutomator($"new UiSelector().className(\"android.widget.TextView\").textStartsWith(\"{capitalized}\")")
+            : MobileBy.AccessibilityId("SearchResultItem_0"); // TODO: verify once iOS build is available
+    }
 
     public static By ShortSummaryCityLabel(string platform) =>
         PlatformHelper.IsAndroid(platform)
-            ? MobileBy.Id("com.companyname.weatherapp:id/summary_city_label") // TODO: verify
-            : MobileBy.AccessibilityId("SummaryCityLabel");                    // TODO: verify
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").instance(0)")
+            : MobileBy.AccessibilityId("SummaryCityLabel"); // TODO: verify once iOS build is available
 
     public static By ShortSummaryTemperature(string platform) =>
         PlatformHelper.IsAndroid(platform)
-            ? MobileBy.Id("com.companyname.weatherapp:id/summary_temp_label") // TODO: verify
-            : MobileBy.AccessibilityId("SummaryTempLabel");                    // TODO: verify
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").instance(2)")
+            : MobileBy.AccessibilityId("SummaryTempLabel"); // TODO: verify once iOS build is available
 
     public static By ShortSummaryConditionLabel(string platform) =>
         PlatformHelper.IsAndroid(platform)
-            ? MobileBy.Id("com.companyname.weatherapp:id/summary_condition_label") // TODO: verify
-            : MobileBy.AccessibilityId("SummaryConditionLabel");                    // TODO: verify
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").instance(3)")
+            : MobileBy.AccessibilityId("SummaryConditionLabel"); // TODO: verify once iOS build is available
 
     public static By ShortSummaryCloseButton(string platform) =>
         PlatformHelper.IsAndroid(platform)
-            ? MobileBy.Id("com.companyname.weatherapp:id/summary_close_button") // TODO: verify
-            : MobileBy.AccessibilityId("SummaryCloseButton");                     // TODO: verify
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").instance(0)")
+            : MobileBy.AccessibilityId("SummaryCloseButton"); // TODO: verify once iOS build is available
 
     public static By ShortSummaryDetailsButton(string platform) =>
         PlatformHelper.IsAndroid(platform)
-            ? MobileBy.Id("com.companyname.weatherapp:id/summary_details_button") // TODO: verify
-            : MobileBy.AccessibilityId("SummaryDetailsButton");                     // TODO: verify
-
-    public static By MapCanvas(string platform) =>
-        PlatformHelper.IsAndroid(platform)
-            ? MobileBy.Id("com.companyname.weatherapp:id/map_view")  // TODO: verify
-            : MobileBy.AccessibilityId("MapView");                   // TODO: verify
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").text(\"Details\")")
+            : MobileBy.AccessibilityId("SummaryDetailsButton"); // TODO: verify once iOS build is available
 }
