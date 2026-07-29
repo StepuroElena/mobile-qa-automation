@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
 
     env:
-      TEST_PLATFORM: ${{ secrets.TEST_PLATFORM }}
+      APPSETTINGS_Platform: ${{ secrets.TEST_PLATFORM }}
       REPORTPORTAL_UUID: ${{ secrets.REPORTPORTAL_UUID }}
       REPORTPORTAL_PROJECT: ${{ secrets.REPORTPORTAL_PROJECT }}
 
