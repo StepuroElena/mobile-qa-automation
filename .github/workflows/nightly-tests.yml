@@ -56,7 +56,7 @@ jobs:
               "description": "Nightly scheduled run via GitHub Actions",
               "debugMode": false,
               "attributes": [
-                { "key": "platform", "value": "${TEST_PLATFORM}" },
+                { "key": "platform", "value": "${APPSETTINGS_Platform}" },
                 { "value": "mobile" },
                 { "value": "ci" }
               ]
