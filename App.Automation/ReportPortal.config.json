@@ -1,8 +1,9 @@
 {
   "server": {
     "url": "https://demo.reportportal.io/api/v1",
-    "project": "YOUR_PROJECT_NAME",
-    "apiKey": "YOUR_API_KEY"
+    "project": "stepuroelena_personal",
+
+    "apiKey": "mobile_tOLnSmKVQIWYm-T_iTQJ14ucPxCv7pOGF-bklvu5iiwRrkHwzbMRY0tBagt6ULaf"
   },
   "launch": {
     "name": "Mobile App Automation",
