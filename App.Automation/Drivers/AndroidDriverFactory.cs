@@ -25,7 +25,10 @@ public class AndroidDriverFactory : IDriverFactory
 
         if (!string.IsNullOrWhiteSpace(_config.AppPath))
         {
-            options.App = _config.AppPath;
+            var absoluteAppPath = Path.GetFullPath(
+                Path.Combine(AppContext.BaseDirectory, _config.AppPath));
+
+            options.App = absoluteAppPath;
         }
 
         options.AddAdditionalAppiumOption("appium:appPackage", _config.AppPackage);
