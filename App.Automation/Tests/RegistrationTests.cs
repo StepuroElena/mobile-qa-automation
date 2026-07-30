@@ -51,4 +51,42 @@ public class RegistrationTests : BaseTest
         Assert.That(registrationPage.IsDisplayed(), Is.True,
             "Expected to remain on the registration screen after a failed (duplicate) registration attempt.");
     }
+    
+    [Test]
+    [Description("Verifies that registration fails with a validation error when password and confirm password don't match")]
+    public void Registration_PasswordMismatch_ShowsError()
+    {
+        var loginPage = new LoginPage(Driver);
+
+        StepLogger.Step(Logger, "Open registration screen and enter mismatched passwords");
+        var registrationPage = loginPage.TapRegisterLink();
+        registrationPage.EnterFullName(GeneratedFullName);
+        registrationPage.EnterEmail(GeneratedEmail);
+        registrationPage.EnterPassword(GeneratedPassword);
+        registrationPage.EnterConfirmPassword(GeneratedPassword + "x");
+        registrationPage.TapRegisterButtonWithoutNavigation();
+
+        StepLogger.Step(Logger, "Verify a password mismatch error is shown and the user remains on the registration screen");
+        var errorMessage = registrationPage.GetErrorMessage();
+        Assert.That(errorMessage, Is.Not.Empty, "Expected a validation error for mismatched passwords.");
+        Assert.That(registrationPage.IsDisplayed(), Is.True, "Expected to remain on the registration screen.");
+    }
+    
+    [Test]
+    [Description("Verifies the Register button is disabled until all required fields are filled")]
+    public void Registration_EmptyFields_RegisterButtonDisabled()
+    {
+        var loginPage = new LoginPage(Driver);
+
+        StepLogger.Step(Logger, "Open registration screen and verify Register button is disabled with empty fields");
+        var registrationPage = loginPage.TapRegisterLink();
+        Assert.That(registrationPage.IsRegisterButtonEnabled(), Is.False, "Expected Register button to be disabled when all fields are empty.");
+
+        StepLogger.Step(Logger, "Fill in all fields and verify Register button becomes enabled");
+        registrationPage.EnterFullName(GeneratedFullName);
+        registrationPage.EnterEmail(GeneratedEmail);
+        registrationPage.EnterPassword(GeneratedPassword);
+        registrationPage.EnterConfirmPassword(GeneratedPassword);
+        Assert.That(registrationPage.IsRegisterButtonEnabled(), Is.True, "Expected Register button to be enabled once all fields are filled.");
+    }
 }

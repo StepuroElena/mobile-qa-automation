@@ -8,7 +8,6 @@ namespace App.Automation.Pages;
 public abstract class BasePage
 {
     protected readonly AppiumDriver Driver;
-    protected readonly int ExplicitWaitSeconds;
     protected readonly string Platform;
     private readonly WebDriverWait _wait;
     protected static readonly ITestLogger Logger = new SerilogTestLogger();
@@ -38,7 +37,7 @@ public abstract class BasePage
     {
         Logger.Info($"Tapping element: {locator}");
         FindVisible(locator).Click();
-        return (TPage)Activator.CreateInstance(typeof(TPage), Driver, ExplicitWaitSeconds, Platform)!;
+        return (TPage)Activator.CreateInstance(typeof(TPage), Driver)!;
     }
 
     protected void TypeText(By locator, string text)
@@ -70,5 +69,11 @@ public abstract class BasePage
         {
             return false;
         }
+    }
+    
+    protected bool IsEnabled(By locator)
+    {
+        Logger.Info($"Checking if element is enabled: {locator}");
+        return FindVisible(locator).Enabled;
     }
 }

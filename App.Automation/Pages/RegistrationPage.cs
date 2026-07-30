@@ -70,4 +70,12 @@ public class RegistrationPage : BasePage
         EnterConfirmPassword(password);
         return TapRegisterButton();
     }
+    
+    public bool IsRegisterButtonEnabled() => IsEnabled(RegistrationPageLocators.RegisterButton(_platform));
+
+    public void TapRegisterButtonWithoutNavigation()
+    {
+        Logger.Info("Tapping 'Register' button (validation error expected, no navigation)");
+        Tap(RegistrationPageLocators.RegisterButton(_platform));
+    }
 }

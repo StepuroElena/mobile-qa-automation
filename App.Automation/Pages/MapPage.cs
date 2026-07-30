@@ -83,4 +83,6 @@ public class MapPage : BasePage
         Logger.Info("Closing short summary popup");
         Tap(MapPageLocators.ShortSummaryCloseButton(_platform));
     }
+    
+    public bool HasSearchResults() => IsDisplayed(MapPageLocators.SearchResultsList(_platform));
 }

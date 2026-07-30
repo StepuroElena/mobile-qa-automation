@@ -88,4 +88,22 @@ public class MapWeatherTests : BaseTest
         StepLogger.Step(Logger, "Verify the user is returned to the login screen after logout");
         Assert.That(loginPage.IsDisplayed(), Is.True, "Expected to be back on the login screen after logout.");
     }
+    
+    private const string NonExistentCity = "asdkfjaskdjf";
+
+    [Test]
+    [Description("Verifies that searching for a non-existent city returns no results")]
+    public void Search_NonExistentCity_ReturnsEmptyResults()
+    {
+        var loginPage = new LoginPage(Driver);
+
+        StepLogger.Step(Logger, $"Register, log in, open the map, and search for a non-existent city '{NonExistentCity}'");
+        loginPage.TapRegisterLink().Register(GeneratedFullName, GeneratedEmail, GeneratedPassword);
+        var homePage = loginPage.Login(GeneratedEmail, GeneratedPassword);
+        var mapPage = homePage.TapGetStarted();
+        mapPage.EnterSearchQuery(NonExistentCity);
+
+        StepLogger.Step(Logger, "Verify no search results are displayed");
+        Assert.That(mapPage.HasSearchResults(), Is.False, "Expected no search results for a non-existent city.");
+    }
 }
