@@ -6,7 +6,7 @@ A test automation framework for the mobile Weather App.
 
 - [Tech Stack](#tech-stack)
 - [Architecture and Project Structure](#architecture-and-project-structure)
-  - [Design Patterns and SOLID](#design-patterns-and-solid)
+  - [Design Patterns](#design-patterns)
   - [Configuration](#configuration)
   - [Test User Setup](#test-user-setup)
   - [Test Scenarios](#test-scenarios)
@@ -36,19 +36,33 @@ A test automation framework for the mobile Weather App.
 
 ```
 App.Automation/
-├── App/        # APK file of the app under test
-├── Config/     # Configuration
-├── Drivers/    # Appium driver factory
-├── Pages/      # Page Object classes
+├── App/                    # APK file of the app under test
+├── Config/                 # Configuration
+├── Drivers/                # Appium driver factory
+├── Pages/                  # Page Object classes
+│   ├── Locators/           # Locators, separated per page
+│   ├── BasePage.cs
+│   ├── HomePage.cs
+│   ├── LoginPage.cs
+│   ├── MapPage.cs
+│   ├── PlatformHelper.cs
+│   ├── RegistrationPage.cs
+│   ├── SettingsPage.cs
+│   └── WeatherDetailsPage.cs
 ├── Tests/
-│   ├── Base/   # Base test class
-│   └── *.cs    # Test scenarios
+│   ├── Base/                # Base test class
+│   ├── LoginTests.cs
+│   ├── MapWeatherTests.cs
+│   └── RegistrationTests.cs
 ├── Utils/
-│   └── Logger/  # Logging + step-logging for reports
+│   ├── Data/                 # Test data generation
+│   ├── Logger/                # Logging + step-logging for reports
+│   ├── ReportPortal.config.json
+│   └── Usings.cs
 └── README.md
 ```
 
-### Design Patterns and SOLID
+### Design Patterns
 
 #### Abstract Factory (instead of Singleton)
 
@@ -74,13 +88,6 @@ Used to separate UI interaction logic from the test scenarios themselves — tes
 **Return-type convention:** every action method in `BasePage` returns a result appropriate to what the action does — navigational actions (e.g. `Tap` on an element that leads to another screen) return an instance of the destination page, while non-navigational actions (`GetText`, `TypeText`, etc.) return the relevant value or `void`. This is implemented once in `BasePage` and inherited/reused across all page classes, keeping navigation and interaction patterns consistent throughout the framework.
 
 **Logging:** in addition to the logging already built into `BasePage`'s methods, every page class adds its own logging call around each action — recording which page the action is happening on, which locator is being used, and what action is being performed. This makes it possible to trace exact UI interactions step-by-step in the ReportPortal / Serilog output, beyond just the step-level (`StepLogger`) logging.
-
-#### SOLID in practice
-
-- **SRP** — each page class is responsible only for interactions on its own screen; locators are extracted into separate locator classes rather than mixed into page logic.
-- **OCP** — adding a new platform (driver factory) or a new page doesn't require modifying existing classes, only adding new ones.
-- **LSP** — `AndroidDriverFactory` and `IosDriverFactory` are interchangeable through the `IDriverFactory` interface; the rest of the framework doesn't care which one is used.
-- **DIP** — tests and page classes depend on the `ITestLogger` abstraction for logging, not on Serilog directly, so the logging library can be swapped without touching test code.
 
 ### Configuration
 
@@ -117,7 +124,7 @@ A total of **9 test scenarios** were implemented, split across 3 test classes by
 4. **Registration button disabled state** — verifies that the Registration button is disabled until all required fields are filled in.
    ⚠️ **This test currently fails — suspected application defect** (the button appears to be clickable before all fields are filled in).
 
-#### MapPageTests (3 scenarios)
+#### MapWeatherTests (3 scenarios)
 
 1. **Search city → detailed weather page** — a city name is entered in the map's search field, selected from the dropdown, and the test verifies that the detailed weather page opens for that city.
 2. **Short weather summary on map tap** — a logged-in user taps on the map and the test verifies that a short weather summary card appears for the tapped location.
@@ -189,6 +196,14 @@ Configured via **GitHub Actions** (`.github/workflows/nightly-tests.yml`):
 ▶️ **Run history:** [GitHub Actions runs](https://github.com/StepuroElena/mobile-qa-automation/actions)
 
 ![GitHub Actions run history](./docs/github-actions-runs.png)
+
+### How to trigger a run manually
+
+1. Go to the **Actions** tab of the repository.
+2. In the left sidebar, select the workflow named **Nightly Mobile Tests**.
+3. Click the **Run workflow** button (top right).
+4. In the dropdown that appears, click the blue **Run workflow** button to confirm.
+5. The workflow will start running — you can follow its progress on the same page, and results will be sent to ReportPortal once it completes.
 
 ---
 
