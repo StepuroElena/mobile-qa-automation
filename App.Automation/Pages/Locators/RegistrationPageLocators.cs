@@ -29,16 +29,6 @@ namespace App.Automation.Pages.Locators;
         PlatformHelper.IsAndroid(platform)
             ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").text(\"Register\")")
             : MobileBy.AccessibilityId("RegisterButton"); // TODO: verify once iOS build is available
-
-    public static By LoginLink(string platform) =>
-        PlatformHelper.IsAndroid(platform)
-            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").text(\"Login\")")
-            : MobileBy.AccessibilityId("BackToLoginLink"); // TODO: verify once iOS build is available
-
-    public static By BackButton(string platform) =>
-        PlatformHelper.IsAndroid(platform)
-            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").text(\"<\")")
-            : MobileBy.AccessibilityId("BackButton"); // TODO: verify once iOS build is available
     
     public static By ErrorRegistrationMessage(string platform) =>
         PlatformHelper.IsAndroid(platform)
@@ -50,8 +40,4 @@ namespace App.Automation.Pages.Locators;
             ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").textContains(\"do not match\")")
             : MobileBy.AccessibilityId("RegistrationErrorLabel"); // TODO: verify once iOS build is available
     
-    public static By SuccessMessage(string platform) =>
-        PlatformHelper.IsAndroid(platform)
-            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").textContains(\"Account created successfully\")")
-            : MobileBy.AccessibilityId("RegistrationSuccessLabel"); // TODO: verify once iOS build is available
 }

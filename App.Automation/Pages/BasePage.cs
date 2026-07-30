@@ -76,32 +76,4 @@ public abstract class BasePage
         Logger.Info($"Checking if element is enabled: {locator}");
         return FindVisible(locator).Enabled;
     }
-    
-    protected bool IsDisplayedShortWait(By locator, int timeoutSeconds = 3, int pollingMs = 150)
-    {
-        Logger.Info($"Checking if element is displayed (short wait, {timeoutSeconds}s, poll {pollingMs}ms): {locator}");
-        try
-        {
-            var shortWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(timeoutSeconds))
-            {
-                PollingInterval = TimeSpan.FromMilliseconds(pollingMs)
-            };
-            return shortWait.Until(d => d.FindElement(locator).Displayed);
-        }
-        catch (WebDriverTimeoutException)
-        {
-            return false;
-        }
-        catch (NoSuchElementException)
-        {
-            return false;
-        }
-    }
-
-    protected string GetTextShortWait(By locator, int timeoutSeconds = 3)
-    {
-        Logger.Info($"Getting text from element (short wait, {timeoutSeconds}s): {locator}");
-        var shortWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(timeoutSeconds));
-        return shortWait.Until(d => d.FindElement(locator).Text);
-    }
 }

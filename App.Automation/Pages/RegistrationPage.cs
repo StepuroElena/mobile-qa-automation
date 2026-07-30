@@ -43,12 +43,6 @@ public class RegistrationPage : BasePage
         return Tap<LoginPage>(RegistrationPageLocators.RegisterButton(_platform));
     }
 
-    public LoginPage TapLoginLink()
-    {
-        Logger.Info("Tapping 'Login' link, navigating to LoginPage");
-        return Tap<LoginPage>(RegistrationPageLocators.LoginLink(_platform));
-    }
-
     public bool IsDisplayed()
     {
         Logger.Info("Checking if RegistrationPage is displayed");
@@ -83,17 +77,5 @@ public class RegistrationPage : BasePage
     {
         Logger.Info("Tapping 'Register' button (validation error expected, no navigation)");
         Tap(RegistrationPageLocators.RegisterButton(_platform));
-    }
-    
-    public string GetSuccessMessage()
-    {
-        Logger.Info("Getting registration success message (toast-like element, short wait)");
-        return GetTextShortWait(RegistrationPageLocators.SuccessMessage(_platform));
-    }
-
-    public bool IsSuccessMessageDisplayed()
-    {
-        Logger.Info("Checking if success message is displayed (toast-like element, short wait)");
-        return IsDisplayedShortWait(RegistrationPageLocators.SuccessMessage(_platform));
     }
 }
