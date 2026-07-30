@@ -22,6 +22,7 @@ public class RegistrationTests : BaseTest
         registrationPage.EnterPassword(GeneratedPassword);
         registrationPage.EnterConfirmPassword(GeneratedPassword);
         loginPage = registrationPage.TapRegisterButton();
+        Assert.That(registrationPage.IsSuccessMessageDisplayed(), Is.True, "Expected the success toast to appear right after registration.");
         Assert.That(loginPage.IsDisplayed(), Is.True, "Expected to be back on the login screen after registration.");
 
         StepLogger.Step(Logger, "Log in with the newly registered credentials");
@@ -69,6 +70,7 @@ public class RegistrationTests : BaseTest
         StepLogger.Step(Logger, "Verify a password mismatch error is shown and the user remains on the registration screen");
         var errorMessage = registrationPage.GetErrorMessage();
         Assert.That(errorMessage, Is.Not.Empty, "Expected a validation error for mismatched passwords.");
+        Assert.That(errorMessage, Is.EqualTo("Passwords do not match."), "Expected a validation error for mismatched passwords.");
         Assert.That(registrationPage.IsDisplayed(), Is.True, "Expected to remain on the registration screen.");
     }
     

@@ -78,4 +78,16 @@ public class RegistrationPage : BasePage
         Logger.Info("Tapping 'Register' button (validation error expected, no navigation)");
         Tap(RegistrationPageLocators.RegisterButton(_platform));
     }
+    
+    public string GetSuccessMessage()
+    {
+        Logger.Info("Getting registration success message (toast-like element, short wait)");
+        return GetTextShortWait(RegistrationPageLocators.SuccessMessage(_platform));
+    }
+
+    public bool IsSuccessMessageDisplayed()
+    {
+        Logger.Info("Checking if success message is displayed (toast-like element, short wait)");
+        return IsDisplayedShortWait(RegistrationPageLocators.SuccessMessage(_platform));
+    }
 }

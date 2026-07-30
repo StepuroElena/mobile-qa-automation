@@ -42,6 +42,11 @@ namespace App.Automation.Pages.Locators;
     
     public static By ErrorMessage(string platform) =>
         PlatformHelper.IsAndroid(platform)
-            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").text(\"An account with this email already exists.\")")
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").instance(4)")
             : MobileBy.AccessibilityId("RegistrationErrorLabel"); // TODO: verify once iOS build is available
+    
+    public static By SuccessMessage(string platform) =>
+        PlatformHelper.IsAndroid(platform)
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").textContains(\"Account created successfully\")")
+            : MobileBy.AccessibilityId("RegistrationSuccessLabel"); // TODO: verify once iOS build is available
 }
