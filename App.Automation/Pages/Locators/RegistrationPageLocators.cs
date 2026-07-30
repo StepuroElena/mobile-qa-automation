@@ -40,9 +40,14 @@ namespace App.Automation.Pages.Locators;
             ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.Button\").text(\"<\")")
             : MobileBy.AccessibilityId("BackButton"); // TODO: verify once iOS build is available
     
-    public static By ErrorMessage(string platform) =>
+    public static By ErrorRegistrationMessage(string platform) =>
         PlatformHelper.IsAndroid(platform)
-            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").instance(4)")
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").textContains(\"email already exists\")")
+            : MobileBy.AccessibilityId("RegistrationErrorLabel"); // TODO: verify once iOS build is available
+    
+    public static By ErrorPasswordMessage(string platform) =>
+        PlatformHelper.IsAndroid(platform)
+            ? MobileBy.AndroidUIAutomator("new UiSelector().className(\"android.widget.TextView\").textContains(\"do not match\")")
             : MobileBy.AccessibilityId("RegistrationErrorLabel"); // TODO: verify once iOS build is available
     
     public static By SuccessMessage(string platform) =>

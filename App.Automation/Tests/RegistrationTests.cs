@@ -46,7 +46,7 @@ public class RegistrationTests : BaseTest
         registrationPage.Register(GeneratedFullName, GeneratedEmail, GeneratedPassword);
 
         StepLogger.Step(Logger, "Verify the exact duplicate-email error message is shown and the user remains on the registration screen");
-        var errorMessage = registrationPage.GetErrorMessage();
+        var errorMessage = registrationPage.GetErrorRegistrationMessage();
         Assert.That(errorMessage, Is.EqualTo("An account with this email already exists."),
             "Expected the exact error message for a duplicate email registration attempt.");
         Assert.That(registrationPage.IsDisplayed(), Is.True,
@@ -68,7 +68,7 @@ public class RegistrationTests : BaseTest
         registrationPage.TapRegisterButtonWithoutNavigation();
 
         StepLogger.Step(Logger, "Verify a password mismatch error is shown and the user remains on the registration screen");
-        var errorMessage = registrationPage.GetErrorMessage();
+        var errorMessage = registrationPage.GetErrorPasswordMessage();
         Assert.That(errorMessage, Is.Not.Empty, "Expected a validation error for mismatched passwords.");
         Assert.That(errorMessage, Is.EqualTo("Passwords do not match."), "Expected a validation error for mismatched passwords.");
         Assert.That(registrationPage.IsDisplayed(), Is.True, "Expected to remain on the registration screen.");

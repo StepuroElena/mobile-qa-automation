@@ -55,10 +55,16 @@ public class RegistrationPage : BasePage
         return base.IsDisplayed(RegistrationPageLocators.RegisterButton(_platform));
     }
 
-    public string GetErrorMessage()
+    public string GetErrorRegistrationMessage()
     {
         Logger.Info("Getting registration error message");
-        return GetText(RegistrationPageLocators.ErrorMessage(_platform));
+        return GetText(RegistrationPageLocators.ErrorRegistrationMessage(_platform));
+    }
+    
+    public string GetErrorPasswordMessage()
+    {
+        Logger.Info("Getting password error message");
+        return GetText(RegistrationPageLocators.ErrorPasswordMessage(_platform));
     }
 
     public LoginPage Register(string fullName, string email, string password)
