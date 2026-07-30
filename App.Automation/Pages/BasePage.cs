@@ -77,12 +77,15 @@ public abstract class BasePage
         return FindVisible(locator).Enabled;
     }
     
-    protected bool IsDisplayedShortWait(By locator, int timeoutSeconds = 3)
+    protected bool IsDisplayedShortWait(By locator, int timeoutSeconds = 3, int pollingMs = 150)
     {
-        Logger.Info($"Checking if element is displayed (short wait, {timeoutSeconds}s): {locator}");
+        Logger.Info($"Checking if element is displayed (short wait, {timeoutSeconds}s, poll {pollingMs}ms): {locator}");
         try
         {
-            var shortWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(timeoutSeconds));
+            var shortWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(timeoutSeconds))
+            {
+                PollingInterval = TimeSpan.FromMilliseconds(pollingMs)
+            };
             return shortWait.Until(d => d.FindElement(locator).Displayed);
         }
         catch (WebDriverTimeoutException)
