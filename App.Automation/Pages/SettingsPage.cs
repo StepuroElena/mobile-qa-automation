@@ -7,12 +7,7 @@ public class SettingsPage : BasePage
 {
     private readonly string _platform;
 
-    public SettingsPage(AppiumDriver driver, int explicitWaitSeconds, string platform)
-        : base(driver, explicitWaitSeconds, platform)
-    {
-        PlatformHelper.EnsureSupportedPlatform(platform);
-        _platform = platform;
-    }
+    public SettingsPage(AppiumDriver driver) : base(driver) => PlatformHelper.EnsureSupportedPlatform(Platform);
 
     public string GetLoggedInAsText() => GetText(SettingsPageLocators.LoggedInAsLabel(_platform));
     public void TapLightTheme() => Tap(SettingsPageLocators.LightThemeButton(_platform));

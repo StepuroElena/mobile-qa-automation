@@ -7,12 +7,7 @@ public class RegistrationPage : BasePage
 {
     private readonly string _platform;
 
-    public RegistrationPage(AppiumDriver driver, int explicitWaitSeconds, string platform)
-        : base(driver, explicitWaitSeconds, platform)
-    {
-        PlatformHelper.EnsureSupportedPlatform(platform);
-        _platform = platform;
-    }
+    public RegistrationPage(AppiumDriver driver) : base(driver) => PlatformHelper.EnsureSupportedPlatform(Platform);
 
     public void EnterFullName(string fullName) => TypeText(RegistrationPageLocators.FullNameField(_platform), fullName);
     public void EnterEmail(string email) => TypeText(RegistrationPageLocators.EmailField(_platform), email);
@@ -33,6 +28,6 @@ public class RegistrationPage : BasePage
         EnterPassword(password);
         EnterConfirmPassword(password);
         TapRegisterButton();
-        return new LoginPage(Driver, ExplicitWaitSeconds, Platform);
+        return new LoginPage(Driver);
     }
 }

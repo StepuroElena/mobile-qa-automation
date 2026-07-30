@@ -12,7 +12,7 @@ public class MapWeatherTests : BaseTest
     [Description("Registers a user, logs in, searches a city on the map, and verifies the full weather details screen is displayed")]
     public void MapSearch_SelectCity_ShowsWeatherDetails()
     {
-        var loginPage = new LoginPage(Driver, Settings.Execution.ExplicitWaitSeconds, Settings.Platform);
+        var loginPage = new LoginPage(Driver);
 
         StepLogger.Step(Logger, $"Register a new user '{GeneratedEmail}' and log in");
         loginPage.TapRegisterLink().Register(GeneratedFullName, GeneratedEmail, GeneratedPassword);
@@ -20,7 +20,7 @@ public class MapWeatherTests : BaseTest
         Assert.That(loginPage.IsDisplayed(), Is.False, "Expected to leave the login screen after a successful login.");
 
         StepLogger.Step(Logger, "Tap 'Get Started' to open the map");
-        var homePage = new HomePage(Driver, Settings.Execution.ExplicitWaitSeconds, Settings.Platform);
+        var homePage = new HomePage(Driver);
         var mapPage = homePage.TapGetStarted();
 
         StepLogger.Step(Logger, $"Search for '{SearchCity}' and select it from the results");
@@ -53,7 +53,7 @@ public class MapWeatherTests : BaseTest
     [Description("Registers a user, logs in, taps a location on the map, and verifies the short weather summary popup is displayed")]
     public void MapTap_SelectLocation_ShowsShortWeatherSummary()
     {
-        var loginPage = new LoginPage(Driver, Settings.Execution.ExplicitWaitSeconds, Settings.Platform);
+        var loginPage = new LoginPage(Driver);
 
         StepLogger.Step(Logger, $"Register a new user '{GeneratedEmail}' and log in");
         loginPage.TapRegisterLink().Register(GeneratedFullName, GeneratedEmail, GeneratedPassword);
@@ -61,7 +61,7 @@ public class MapWeatherTests : BaseTest
         Assert.That(loginPage.IsDisplayed(), Is.False, "Expected to leave the login screen after a successful login.");
 
         StepLogger.Step(Logger, "Tap 'Get Started' to open the map");
-        var homePage = new HomePage(Driver, Settings.Execution.ExplicitWaitSeconds, Settings.Platform);
+        var homePage = new HomePage(Driver);
         var mapPage = homePage.TapGetStarted();
 
         StepLogger.Step(Logger, "Tap a location near the center of the map");

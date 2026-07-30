@@ -6,12 +6,7 @@ public class MapPage : BasePage
 {
     private readonly string _platform;
 
-    public MapPage(AppiumDriver driver, int explicitWaitSeconds, string platform)
-        : base(driver, explicitWaitSeconds, platform)
-    {
-        PlatformHelper.EnsureSupportedPlatform(platform);
-        _platform = platform;
-    }
+    public MapPage(AppiumDriver driver) : base(driver) => PlatformHelper.EnsureSupportedPlatform(Platform);
 
     public void EnterSearchQuery(string cityName) => TypeText(MapPageLocators.SearchField(_platform), cityName);
     public WeatherDetailsPage TapFirstSearchResult(string cityName) => Tap<WeatherDetailsPage>(MapPageLocators.FirstSearchResult(_platform, cityName));

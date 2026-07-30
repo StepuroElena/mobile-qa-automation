@@ -10,7 +10,7 @@ public class LoginTests : BaseTest
     [Description("Verifies that login fails with invalid credentials and an error message is shown")]
     public void Login_InvalidCredentials_ShowsError()
     {
-        var loginPage = new LoginPage(Driver, Settings.Execution.ExplicitWaitSeconds, Settings.Platform);
+        var loginPage = new LoginPage(Driver);
 
         StepLogger.Step(Logger, "Enter an invalid email and password, then tap Login");
         loginPage.EnterEmail(GeneratedEmail);
@@ -27,7 +27,7 @@ public class LoginTests : BaseTest
     [Description("Registers a new user, logs in, opens the map via Get Started, navigates back, and logs out successfully")]
     public void Logout_AfterLogin_ReturnsToLoginScreen()
     {
-        var loginPage = new LoginPage(Driver, Settings.Execution.ExplicitWaitSeconds, Settings.Platform);
+        var loginPage = new LoginPage(Driver);
 
         StepLogger.Step(Logger, $"Tap the 'Register' link and register a new user '{GeneratedEmail}'");
         loginPage.TapRegisterLink().Register(GeneratedFullName, GeneratedEmail, GeneratedPassword);
@@ -37,7 +37,7 @@ public class LoginTests : BaseTest
         Assert.That(loginPage.IsDisplayed(), Is.False, "Expected to leave the login screen after a successful login.");
 
         StepLogger.Step(Logger, "Tap 'Get Started', verify the map screen, then navigate back to Home");
-        var homePage = new HomePage(Driver, Settings.Execution.ExplicitWaitSeconds, Settings.Platform);
+        var homePage = new HomePage(Driver);
         var mapPage = homePage.TapGetStarted();
         Assert.That(mapPage.IsDisplayed(), Is.True, "Expected the map screen to be displayed after tapping Get Started.");
         homePage = mapPage.TapBackButton();

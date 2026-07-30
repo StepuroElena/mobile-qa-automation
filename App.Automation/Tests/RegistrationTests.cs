@@ -10,7 +10,7 @@ public class RegistrationTests : BaseTest
     [Description("Verifies that a new user can register and then successfully log in with the same credentials")]
     public void Registration_NewUser_ThenLogin_Succeeds()
     {
-        var loginPage = new LoginPage(Driver, Settings.Execution.ExplicitWaitSeconds, Settings.Platform);
+        var loginPage = new LoginPage(Driver);
 
         StepLogger.Step(Logger, "Tap the 'Register' link to open the registration screen");
         var registrationPage = loginPage.TapRegisterLink();
@@ -33,7 +33,7 @@ public class RegistrationTests : BaseTest
     [Description("Verifies that registering with an email that already exists shows an error message")]
     public void Registration_DuplicateEmail_ShowsError()
     {
-        var loginPage = new LoginPage(Driver, Settings.Execution.ExplicitWaitSeconds, Settings.Platform);
+        var loginPage = new LoginPage(Driver);
 
         StepLogger.Step(Logger, $"Register a new user '{GeneratedEmail}' for the first time");
         var registrationPage = loginPage.TapRegisterLink();

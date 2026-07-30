@@ -6,12 +6,7 @@ public class WeatherDetailsPage : BasePage
 {
     private readonly string _platform;
 
-    public WeatherDetailsPage(AppiumDriver driver, int explicitWaitSeconds, string platform)
-        : base(driver, explicitWaitSeconds,platform)
-    {
-        PlatformHelper.EnsureSupportedPlatform(platform);
-        _platform = platform;
-    }
+    public WeatherDetailsPage(AppiumDriver driver) : base(driver) => PlatformHelper.EnsureSupportedPlatform(Platform);
 
     public string GetCityTitle() => GetText(WeatherDetailsPageLocators.CityTitle(_platform));
 

@@ -7,11 +7,7 @@ public class LoginPage : BasePage
 {
     private readonly string _platform;
 
-    public LoginPage(AppiumDriver driver, int explicitWaitSeconds, string platform) : base(driver, explicitWaitSeconds, platform)
-    {
-        PlatformHelper.EnsureSupportedPlatform(platform);
-        _platform = platform;
-    }
+    public LoginPage(AppiumDriver driver) : base(driver) => PlatformHelper.EnsureSupportedPlatform(Platform);
 
     public void EnterEmail(string email) => TypeText(LoginPageLocators.EmailField(_platform), email);
 
@@ -30,6 +26,6 @@ public class LoginPage : BasePage
         EnterEmail(email);
         EnterPassword(password);
         TapLoginButton();
-        return new HomePage(Driver, ExplicitWaitSeconds, Platform);
+        return new HomePage(Driver);
     }
 }

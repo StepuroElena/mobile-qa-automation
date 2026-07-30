@@ -11,12 +11,13 @@ public abstract class BasePage
     protected readonly string Platform;
     private readonly WebDriverWait _wait;
 
-    protected BasePage(AppiumDriver driver, int explicitWaitSeconds, string platform)
+    protected BasePage(AppiumDriver driver)
     {
         Driver = driver;
-        ExplicitWaitSeconds = explicitWaitSeconds;
-        Platform = platform;
-        _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(explicitWaitSeconds));
+
+        var settings = App.Automation.Config.ConfigReader.Load();
+        Platform = settings.Platform;
+        _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(settings.Execution.ExplicitWaitSeconds));
     }
 
     protected IWebElement FindVisible(By locator)
