@@ -62,7 +62,20 @@ Driver creation is implemented through `IDriverFactory`, with two implementation
 
 Used to separate UI interaction logic from the test scenarios themselves — tests call page methods instead of working with raw locators directly.
 
-`(TODO — to be filled in)`
+**Structure:** all page classes inherit from a common `BasePage`, which implements the low-level interaction methods (`Tap`, `TypeText`, `GetText`, etc.). Concrete page classes are:
+
+- `LoginPage`
+- `RegistrationPage`
+- `HomePage`
+- `MapPage`
+- `SettingsPage` (contains the logout action)
+- `WeatherDetailsPage`
+
+**Locators** are kept in separate locator classes per page, rather than inline in the page classes — this keeps the page classes focused on behavior/actions rather than element definitions, and makes it easier to update a locator in one place if the app UI changes.
+
+**Return-type convention:** every action method in `BasePage` returns a result appropriate to what the action does — navigational actions (e.g. `Tap` on an element that leads to another screen) return an instance of the destination page, while non-navigational actions (`GetText`, `TypeText`, etc.) return the relevant value or `void`. This is implemented once in `BasePage` and inherited/reused across all page classes, keeping navigation and interaction patterns consistent throughout the framework.
+
+**Logging:** in addition to the logging already built into `BasePage`'s methods, every page class adds its own logging call around each action — recording which page the action is happening on, which locator is being used, and what action is being performed. This makes it possible to trace exact UI interactions step-by-step in the ReportPortal / Serilog output, beyond just the step-level (`StepLogger`) logging.
 
 ---
 
@@ -110,13 +123,37 @@ dotnet test --settings Tests/Base/.runsettings
 
 ## Test User Setup
 
-*(TODO — to be filled in)*
+Test users are generated **dynamically** for each test run — username, email, and password are auto-generated rather than hardcoded, to avoid collisions between parallel/repeated runs and to keep tests independent of any fixed pre-existing account.
+
+**How it currently works:** since no backend/API for user management was available for this assignment, the dynamically generated user is created by driving the app's own **registration (sign-up) UI** at the start of the test, and the same generated credentials are then reused for the rest of that test's scenario.
+
+**How this ideally should work:** in a real (non-test) environment, user creation/cleanup should not go through the UI at all — it adds unnecessary time and UI-layer flakiness to what is really just test data setup. The correct approach would be to create (and, where relevant, delete) the test user directly via a backend/API call before the test runs — either provisioning one reusable dynamic user, or creating and tearing down a fresh user per test. UI-based registration here is a workaround specifically because no API access was provided as part of this assignment.
 
 ---
 
 ## Test Scenarios
 
-*(TODO — to be filled in)*
+A total of **9 test scenarios** were implemented, split across 3 test classes by functional area.
+
+### LoginTests (2 scenarios)
+
+1. **Negative login** — verifies that a user with incorrect/non-existent credentials cannot log in.
+2. **Successful login (smoke/sanity)** — a registered user logs in, and the test checks basic app health: the Home page is displayed, the Map page opens, and the user can log out. This is not a deep functional check of each screen, but a smoke check that the main screens are reachable and render correctly after login.
+
+### RegistrationTests (4 scenarios)
+
+1. **Successful registration + login** — a user successfully registers (a success toast/message is verified as part of this), then logs in with the same credentials.
+2. **Duplicate registration** — verifies that registering twice with the same credentials is not allowed.
+3. **Password confirmation match** — on the registration page, the password is entered twice (password + confirm password); the test verifies registration only succeeds when both values match.
+4. **Registration button disabled state** — verifies that the Registration button is disabled until all required fields are filled in.
+   ⚠️ **This test currently fails — suspected application defect** (the button appears to be clickable before all fields are filled in).
+
+### MapPageTests (3 scenarios)
+
+1. **Search city → detailed weather page** — a city name is entered in the map's search field, selected from the dropdown, and the test verifies that the detailed weather page opens for that city.
+2. **Short weather summary on map tap** — a logged-in user taps on the map and the test verifies that a short weather summary card appears for the tapped location.
+   ⚠️ **This test is flaky**: the tap needs to land on land (not on sea/ocean) for the summary to appear, and hit accuracy depends on the coordinates tapped on the given device/emulator. No stable fix has been found yet.
+3. **Non-existent city search** — entering a non-existent city name in the search field results in an empty dropdown, since no weather data can be retrieved for it.
 
 ---
 
@@ -132,9 +169,16 @@ Additionally, **step-logging** is implemented (`StepLogger`) — every meaningfu
 
 **ReportPortal** was chosen for reporting (the public free demo server, demo.reportportal.io).
 
-**Why ReportPortal instead of Allure:** Allure was considered as an alternative and would likely have been a better fit for storing test cases and test scenarios separately from run reports. However, a free self-hosted deployment of Allure TestOps (with a web dashboard, rather than just a static HTML report) wasn't feasible, while free access to ReportPortal was already available through its public demo server — with full dashboards.
+**Why ReportPortal instead of Allure:** Allure was considered as an alternative and, ideally, would have been the preferred choice — it's a better fit for storing test cases and test scenarios separately from run reports, with richer dashboards for that purpose. However, a free self-hosted deployment of Allure TestOps (with a web dashboard, rather than just a static HTML report) wasn't feasible within the scope of this assignment, while free access to ReportPortal was already available through its public demo server — with full dashboards out of the box.
 
-⚠️ **Public demo server limitation:** data is periodically flushed entirely. This is not meant for long-term storage of results, only for demonstrating/testing the integration.
+**Note:** if this framework were integrated into an existing project that already has its own CI/CD pipeline (e.g. Azure DevOps, TeamCity, Jenkins), it would likely make more sense to plug into whatever reporting solution is already used there, rather than introducing a new tool. ReportPortal here was chosen specifically to be able to demonstrate live dashboards for this assignment.
+
+⚠️ **Public demo server limitation:** data on the demo server is periodically flushed (runs and history do not persist long-term), and API tokens issued for it may also be invalidated/reset without notice. This is not meant for long-term storage of results — only for demonstrating/testing the integration.
+
+Because of this, screenshots of representative ReportPortal dashboards are included below for reference, in case the live data is no longer available at review time:
+
+![ReportPortal dashboard](./docs/reportportal-dashboard.png)
+![ReportPortal launch details](./docs/reportportal-launch.png)
 
 ---
 
@@ -146,6 +190,10 @@ Configured via **GitHub Actions** (`.github/workflows/nightly-tests.yml`):
 - **Platform** — Ubuntu runner with hardware acceleration for stable Android emulator performance
 - Installs: .NET, Node.js, Appium + UiAutomator2 driver
 - Results are automatically sent to ReportPortal with `platform`, `mobile`, and `ci` attributes — allowing nightly CI runs to be filtered separately from local runs
+
+▶️ **Run history:** [GitHub Actions runs](https://github.com/StepuroElena/mobile-qa-automation/actions)
+
+![GitHub Actions run history](./docs/github-actions-runs.png)
 
 ---
 
