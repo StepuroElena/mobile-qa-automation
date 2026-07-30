@@ -7,7 +7,7 @@ public class WeatherDetailsPage : BasePage
     private readonly string _platform;
 
     public WeatherDetailsPage(AppiumDriver driver, int explicitWaitSeconds, string platform)
-        : base(driver, explicitWaitSeconds)
+        : base(driver, explicitWaitSeconds,platform)
     {
         PlatformHelper.EnsureSupportedPlatform(platform);
         _platform = platform;
@@ -29,6 +29,6 @@ public class WeatherDetailsPage : BasePage
         return Driver.FindElements(WeatherDetailsPageLocators.DailyForecastRow(_platform)).Count;
     }
 
-    public void TapBackButton() => Tap(WeatherDetailsPageLocators.BackButton(_platform));
+    public MapPage TapBackButton() => Tap<MapPage>(WeatherDetailsPageLocators.BackButton(_platform));
     public bool IsDisplayed() => IsDisplayed(WeatherDetailsPageLocators.CityTitle(_platform));
 }

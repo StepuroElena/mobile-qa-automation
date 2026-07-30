@@ -7,7 +7,7 @@ public class LoginPage : BasePage
 {
     private readonly string _platform;
 
-    public LoginPage(AppiumDriver driver, int explicitWaitSeconds, string platform) : base(driver, explicitWaitSeconds)
+    public LoginPage(AppiumDriver driver, int explicitWaitSeconds, string platform) : base(driver, explicitWaitSeconds, platform)
     {
         PlatformHelper.EnsureSupportedPlatform(platform);
         _platform = platform;
@@ -17,18 +17,19 @@ public class LoginPage : BasePage
 
     public void EnterPassword(string password) => TypeText(LoginPageLocators.PasswordField(_platform), password);
 
-    public void TapLoginButton() => Tap(LoginPageLocators.LoginButton(_platform));
+    public LoginPage TapLoginButton() => Tap<LoginPage>(LoginPageLocators.LoginButton(_platform));
 
-    public void TapRegisterLink() => Tap(LoginPageLocators.RegisterLink(_platform));
+    public RegistrationPage TapRegisterLink() => Tap<RegistrationPage>(LoginPageLocators.RegisterLink(_platform));
 
     public string GetErrorMessage() => GetText(LoginPageLocators.ErrorMessage(_platform));
 
     public bool IsDisplayed() => IsDisplayed(LoginPageLocators.LoginButton(_platform));
 
-    public void Login(string email, string password)
+    public HomePage Login(string email, string password)
     {
         EnterEmail(email);
         EnterPassword(password);
         TapLoginButton();
+        return new HomePage(Driver, ExplicitWaitSeconds, Platform);
     }
 }

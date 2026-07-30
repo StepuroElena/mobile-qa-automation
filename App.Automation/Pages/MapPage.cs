@@ -7,22 +7,23 @@ public class MapPage : BasePage
     private readonly string _platform;
 
     public MapPage(AppiumDriver driver, int explicitWaitSeconds, string platform)
-        : base(driver, explicitWaitSeconds)
+        : base(driver, explicitWaitSeconds, platform)
     {
         PlatformHelper.EnsureSupportedPlatform(platform);
         _platform = platform;
     }
 
     public void EnterSearchQuery(string cityName) => TypeText(MapPageLocators.SearchField(_platform), cityName);
-    public void TapFirstSearchResult(string cityName) => Tap(MapPageLocators.FirstSearchResult(_platform, cityName));
-    public void TapBackButton() => Tap(MapPageLocators.BackButton(_platform));
+    public WeatherDetailsPage TapFirstSearchResult(string cityName) => Tap<WeatherDetailsPage>(MapPageLocators.FirstSearchResult(_platform, cityName));
+    public HomePage TapBackButton() => Tap<HomePage>(MapPageLocators.BackButton(_platform));
     public bool IsDisplayed() => IsDisplayed(MapPageLocators.SearchField(_platform));
 
     public void TapMapNearCenter()
     {
         var windowSize = Driver.Manage().Window.Size;
-        var x = windowSize.Width / 2;
-        var y = (int)(windowSize.Height * 0.55); 
+
+        var x = (int)(windowSize.Width * 0.35);
+        var y = (int)(windowSize.Height * 0.40);
 
         var args = new Dictionary<string, object>
         {
