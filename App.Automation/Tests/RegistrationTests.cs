@@ -22,8 +22,8 @@ public class RegistrationTests : BaseTest
         registrationPage.EnterPassword(GeneratedPassword);
         registrationPage.EnterConfirmPassword(GeneratedPassword);
         loginPage = registrationPage.TapRegisterButton();
-        Assert.That(registrationPage.IsSuccessMessageDisplayed(), Is.True, "Expected the success toast to appear right after registration.");
         Assert.That(loginPage.IsDisplayed(), Is.True, "Expected to be back on the login screen after registration.");
+        Assert.That(registrationPage.IsSuccessMessageDisplayed(), Is.True, "Expected the success toast to appear right after registration.");
 
         StepLogger.Step(Logger, "Log in with the newly registered credentials");
         loginPage.Login(GeneratedEmail, GeneratedPassword);
