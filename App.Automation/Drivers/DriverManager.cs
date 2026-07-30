@@ -1,4 +1,5 @@
 using App.Automation.Config;
+using App.Automation.Utils.Logger;
 using OpenQA.Selenium.Appium;
 
 namespace App.Automation.Pages;
@@ -6,6 +7,7 @@ namespace App.Automation.Pages;
 public class DriverManager
 {
     private static readonly ThreadLocal<AppiumDriver?> _driver = new();
+    private static readonly ITestLogger _logger = new SerilogTestLogger();
 
     public static AppiumDriver GetDriver(AppSettings settings)
     {
@@ -16,6 +18,7 @@ public class DriverManager
                 : new AndroidDriverFactory(settings.Android, settings.Execution.AppiumServerUrl);
 
             _driver.Value = factory.CreateDriver();
+            _logger.Info($"Driver created for platform: {settings.Platform}");
         }
 
         return _driver.Value;
@@ -25,5 +28,6 @@ public class DriverManager
     {
         _driver.Value?.Quit();
         _driver.Value = null;
+        _logger.Info("Driver quit");
     }
 }

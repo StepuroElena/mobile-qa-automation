@@ -6,7 +6,7 @@ namespace App.Automation.Config;
 public static class ConfigReader
 {
     private static AppSettings? _cached;
-    private static readonly ITestLogger _logger;
+    private static readonly ITestLogger _logger = new SerilogTestLogger();
 
     public static AppSettings Load()
     {
@@ -23,9 +23,24 @@ public static class ConfigReader
 
         var settings = new AppSettings();
         configuration.GetSection("AppSettings").Bind(settings);
-
         ValidateSettings(settings);
 
+        _logger.Info($"Platform: {settings.Platform}");
+
+        var platformSettings = settings.Platform.Equals("Android", StringComparison.OrdinalIgnoreCase)
+            ? (object)settings.Android
+            : settings.iOS;
+
+        foreach (var prop in platformSettings.GetType().GetProperties())
+        {
+            _logger.Info($"PLatform settings: {settings.Platform}.{prop.Name}: {prop.GetValue(platformSettings)}");
+        }
+
+        foreach (var prop in settings.Execution.GetType().GetProperties())
+        {
+            _logger.Info($"Execution.{prop.Name}: {prop.GetValue(settings.Execution)}");
+        }
+        
         _cached = settings;
         return _cached;
     }
