@@ -33,11 +33,10 @@ public class LoginTests : BaseTest
         loginPage.TapRegisterLink().Register(GeneratedFullName, GeneratedEmail, GeneratedPassword);
 
         StepLogger.Step(Logger, "Log in with the newly registered credentials");
-        loginPage.Login(GeneratedEmail, GeneratedPassword);
+        var homePage = loginPage.Login(GeneratedEmail, GeneratedPassword);
         Assert.That(loginPage.IsDisplayed(), Is.False, "Expected to leave the login screen after a successful login.");
 
         StepLogger.Step(Logger, "Tap 'Get Started', verify the map screen, then navigate back to Home");
-        var homePage = new HomePage(Driver);
         var mapPage = homePage.TapGetStarted();
         Assert.That(mapPage.IsDisplayed(), Is.True, "Expected the map screen to be displayed after tapping Get Started.");
         homePage = mapPage.TapBackButton();

@@ -7,6 +7,7 @@ namespace App.Automation.Tests;
 public class MapWeatherTests : BaseTest
 {
     private const string SearchCity = "Almada";
+    private const string NonExistentCity = "asdkfjaskdjf";
 
     [Test]
     [Description("Registers a user, logs in, searches a city on the map, and verifies the full weather details screen is displayed")]
@@ -16,11 +17,10 @@ public class MapWeatherTests : BaseTest
 
         StepLogger.Step(Logger, $"Register a new user '{GeneratedEmail}' and log in");
         loginPage.TapRegisterLink().Register(GeneratedFullName, GeneratedEmail, GeneratedPassword);
-        loginPage.Login(GeneratedEmail, GeneratedPassword);
+        var homePage = loginPage.Login(GeneratedEmail, GeneratedPassword);
         Assert.That(loginPage.IsDisplayed(), Is.False, "Expected to leave the login screen after a successful login.");
 
         StepLogger.Step(Logger, "Tap 'Get Started' to open the map");
-        var homePage = new HomePage(Driver);
         var mapPage = homePage.TapGetStarted();
 
         StepLogger.Step(Logger, $"Search for '{SearchCity}' and select it from the results");
@@ -33,7 +33,7 @@ public class MapWeatherTests : BaseTest
         var temperature = weatherDetailsPage.GetCurrentTemperature();
         var dailyRowCount = weatherDetailsPage.GetDailyForecastRowCount();
         Assert.That(cityTitle, Does.Contain(SearchCity), "Expected the details screen to display the searched city name.");
-        Assert.That(temperature, Does.Match(@"-?\d+(\.\d+)?\s*°C"), "Expected the largest-text temperature to be a valid value (e.g. '21.6 °C').");
+        Assert.That(temperature, Does.Match(@"-?\d+(\.\d+)?\s*°C"), "Expected the largest-text temperature to be a valid value");
         Assert.That(dailyRowCount, Is.EqualTo(5), "Expected exactly 5 daily forecast rows to be displayed.");
 
         StepLogger.Step(Logger, "Navigate back to the map, then to Home");
@@ -57,11 +57,10 @@ public class MapWeatherTests : BaseTest
 
         StepLogger.Step(Logger, $"Register a new user '{GeneratedEmail}' and log in");
         loginPage.TapRegisterLink().Register(GeneratedFullName, GeneratedEmail, GeneratedPassword);
-        loginPage.Login(GeneratedEmail, GeneratedPassword);
+        var homePage = loginPage.Login(GeneratedEmail, GeneratedPassword);
         Assert.That(loginPage.IsDisplayed(), Is.False, "Expected to leave the login screen after a successful login.");
 
         StepLogger.Step(Logger, "Tap 'Get Started' to open the map");
-        var homePage = new HomePage(Driver);
         var mapPage = homePage.TapGetStarted();
 
         StepLogger.Step(Logger, "Tap a location near the center of the map");
@@ -89,7 +88,6 @@ public class MapWeatherTests : BaseTest
         Assert.That(loginPage.IsDisplayed(), Is.True, "Expected to be back on the login screen after logout.");
     }
     
-    private const string NonExistentCity = "asdkfjaskdjf";
 
     [Test]
     [Description("Verifies that searching for a non-existent city returns no results")]
